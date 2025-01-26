@@ -2,16 +2,18 @@ import java.sql.*;
 public class UserDAO implements DatabaseOperations {
     @Override
     public void createUser(User user) {
-        String sql = "INSERT INTO Users (Name, Email, Password, AccountType, Balance) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Users (Name, Email, Password, AccountType, Balance, Reward_Points) VALUES (?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getEmail());
-            stmt.setString(3, "defaultPassword");
+            stmt.setString(3, user.getPassword());
             stmt.setString(4, user instanceof PremiumUser ? "Premium" : "Regular");
             stmt.setDouble(5, user.getBalance());
+            stmt.setDouble(6, user.getRewardPoints());
+
             stmt.executeUpdate();
-            System.out.println("User added successfully.");
+            System.out.printf("User added successfully.");
         } catch (SQLException e) {
             System.err.println("Error creating user: " + e.getMessage());
         }
@@ -30,8 +32,9 @@ public class UserDAO implements DatabaseOperations {
                             rs.getInt("UserID"),
                             rs.getString("Name"),
                             rs.getString("Email"),
+                            rs.getString("Password"),
                             rs.getDouble("Balance"),
-                            0.0
+                            rs.getDouble("Reward_Points")
                     );
                     user.displayUserInfo();
                 } else {
@@ -39,6 +42,7 @@ public class UserDAO implements DatabaseOperations {
                             rs.getInt("UserID"),
                             rs.getString("Name"),
                             rs.getString("Email"),
+                            rs.getString("Password"),
                             rs.getDouble("Balance")
                     );
                     user.displayUserInfo();

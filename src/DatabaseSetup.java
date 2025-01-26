@@ -1,12 +1,18 @@
+import java.sql.Connection;
+import java.sql.Statement;
+
 public class DatabaseSetup {
     public static void setupDatabase() {
+        // SQL-запросы для создания таблиц
         String createUsersTable = """
             CREATE TABLE IF NOT EXISTS Users (
                 UserID SERIAL PRIMARY KEY,
                 Name VARCHAR(100) NOT NULL,
                 Email VARCHAR(100) UNIQUE NOT NULL,
                 Password VARCHAR(255) NOT NULL,
-                AccountType VARCHAR(20) NOT NULL
+                AccountType VARCHAR(20) NOT NULL,
+                Balance DECIMAL(15, 2) DEFAULT 0.00,
+                Reward_Points DECIMAL(15, 2) DEFAULT 0.00
             );
         """;
 
@@ -16,16 +22,6 @@ public class DatabaseSetup {
                 UserID INT NOT NULL REFERENCES Users(UserID) ON DELETE CASCADE,
                 Balance DECIMAL(15, 2) NOT NULL DEFAULT 0.00,
                 AccountType VARCHAR(20) NOT NULL
-            );
-        """;
-
-        String createTransactionsTable = """
-            CREATE TABLE IF NOT EXISTS Transactions (
-                TransactionID SERIAL PRIMARY KEY,
-                AccountID INT NOT NULL REFERENCES Accounts(AccountID) ON DELETE CASCADE,
-                Amount DECIMAL(15, 2) NOT NULL,
-                TransactionType VARCHAR(20) CHECK (TransactionType IN ('Credit', 'Debit')),
-                Timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         """;
 
@@ -47,5 +43,18 @@ public class DatabaseSetup {
                 ExpiryDate DATE NOT NULL
             );
         """;
+
+        try (Connection connection = DatabaseConnection.getConnection();
+             Statement statement = connection.createStatement()) {
+            // Выполняем каждый запрос
+            statement.executeUpdate(createUsersTable);
+            statement.executeUpdate(createAccountsTable);
+            statement.executeUpdate(createLoansTable);
+            statement.executeUpdate(createCardsTable);
+
+            System.out.println("Таблицы успешно созданы или уже существуют.");
+        } catch (Exception e) {
+            System.err.println("Ошибка при создании базы данных: " + e.getMessage());
+        }
     }
 }

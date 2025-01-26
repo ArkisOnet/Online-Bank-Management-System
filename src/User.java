@@ -3,12 +3,15 @@ abstract class User {
     private int userId;
     private String name;
     private String email;
+    private String password;
     private double balance;
 
-    public User(int userId, String name, String email, double balance) {
+
+    public User(int userId, String name, String email,String password ,double balance) {
         this.userId = userId;
         this.name = name;
         this.email = email;
+        this.password = password;
         this.balance = balance;
     }
 
@@ -39,6 +42,13 @@ abstract class User {
     public void setBalance(double balance) {
         this.balance = balance;
     }
+
+    public String getPassword(){
+        return password;
+    }
+
+    abstract public boolean isPrem();
+    abstract public double getRewardPoints();
 
     public abstract void displayUserInfo();
 }
