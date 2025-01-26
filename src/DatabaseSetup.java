@@ -3,7 +3,6 @@ import java.sql.Statement;
 
 public class DatabaseSetup {
     public static void setupDatabase() {
-        // SQL-запросы для создания таблиц
         String createUsersTable = """
             CREATE TABLE IF NOT EXISTS Users (
                 UserID SERIAL PRIMARY KEY,
@@ -46,7 +45,6 @@ public class DatabaseSetup {
 
         try (Connection connection = DatabaseConnection.getConnection();
              Statement statement = connection.createStatement()) {
-            // Выполняем каждый запрос
             statement.executeUpdate(createUsersTable);
             statement.executeUpdate(createAccountsTable);
             statement.executeUpdate(createLoansTable);
