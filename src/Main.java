@@ -5,6 +5,7 @@ public class Main {
     public static void main(String[] args) {
         UserDAO userDAO = new UserDAO();
         Scanner scanner = new Scanner(System.in);
+        DatabaseSetup.setupDatabase();
 
         while (true) {
             System.out.println("\n--- Online Bank Management System ---");
@@ -23,9 +24,11 @@ public class Main {
                     String name = scanner.next();
                     System.out.print("Enter email: ");
                     String email = scanner.next();
+                    System.out.print("Enter password: ");
+                    String password = scanner.next();
                     System.out.print("Enter initial balance: ");
                     double balance = scanner.nextDouble();
-                    User regularUser = new RegularUser(0, name, email, balance);
+                    User regularUser = new RegularUser(0, name, email, password, balance);
                     userDAO.createUser(regularUser);
                 }
                 case 2 -> {
@@ -33,11 +36,13 @@ public class Main {
                     String name = scanner.next();
                     System.out.print("Enter email: ");
                     String email = scanner.next();
+                    System.out.print("Enter password: ");
+                    String password = scanner.next();
                     System.out.print("Enter initial balance: ");
                     double balance = scanner.nextDouble();
                     System.out.print("Enter initial reward points: ");
                     double rewardPoints = scanner.nextDouble();
-                    User premiumUser = new PremiumUser(0, name, email, balance, rewardPoints);
+                    User premiumUser = new PremiumUser(0, name, email, password, balance, rewardPoints);
                     userDAO.createUser(premiumUser);
                 }
                 case 3 -> userDAO.readUsers();
